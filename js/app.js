@@ -34,7 +34,6 @@ import { buildLighting }     from "./engine/Lighting.js";
 import { createPainting }    from "./engine/Painting.js";
 import { createSculpture }   from "./engine/Sculpture.js";
 import { createWelcomeBoard} from "./engine/WelcomeBoard.js";
-import { createMapBoard }    from "./engine/MapBoard.js";
 import { MusicVisualizer }   from "./engine/MusicVisualizer.js";
 import { InfoPanel }         from "./ui/InfoPanel.js";
 import { DragControls }      from "./ui/DragControls.js";
@@ -63,26 +62,25 @@ const FRAME_Y   = 2.65;   // ketinggian bingkai standar (eye-level)
 // ════════════════════════════════════════════════════════════════
 
 const PAINTING_LAYOUT = [
-  // Dinding Utara (3 bingkai)
-  { idx: 0, pos: [-5.5, FRAME_Y, WALL.N], rotY: 0,            w: 3.0, h: 2.2 },
-  { idx: 1, pos: [   0, FRAME_Y, WALL.N], rotY: 0,            w: 3.4, h: 2.4 },
-  { idx: 2, pos: [ 5.5, FRAME_Y, WALL.N], rotY: 0,            w: 3.0, h: 2.2 },
+  // ── Dinding Utara — 5 bingkai foto (idx 7–11) ─────────────
+  // Foto mulai dari paintings[7] karena paintings[0-6] = 7 proyek (slot dihapus)
+  { idx: 7, pos: [-8.0, FRAME_Y, WALL.N], rotY: 0, w: 2.6, h: 2.0 },
+  { idx: 8, pos: [-4.0, FRAME_Y, WALL.N], rotY: 0, w: 2.6, h: 2.0 },
+  { idx: 9, pos: [   0, FRAME_Y, WALL.N], rotY: 0, w: 2.6, h: 2.0 },
+  { idx:10, pos: [ 4.0, FRAME_Y, WALL.N], rotY: 0, w: 2.6, h: 2.0 },
+  { idx:11, pos: [ 8.0, FRAME_Y, WALL.N], rotY: 0, w: 2.6, h: 2.0 },
 
-  // Dinding Timur (2 bingkai, zona utara)
-  { idx: 3, pos: [WALL.E, FRAME_Y, -8],   rotY: -Math.PI / 2, w: 3.0, h: 2.2 },
-  { idx: 4, pos: [WALL.E, FRAME_Y,  3],   rotY: -Math.PI / 2, w: 3.0, h: 2.2 },
+  // ── Dinding Timur — 4 bingkai foto (idx 12–15) ────────────
+  { idx:12, pos: [WALL.E, FRAME_Y,  -6.0], rotY: -Math.PI / 2, w: 2.6, h: 2.0 },
+  { idx:13, pos: [WALL.E, FRAME_Y,  -1.5], rotY: -Math.PI / 2, w: 2.6, h: 2.0 },
+  { idx:14, pos: [WALL.E, FRAME_Y,   3.0], rotY: -Math.PI / 2, w: 2.6, h: 2.0 },
+  { idx:15, pos: [WALL.E, FRAME_Y,   7.5], rotY: -Math.PI / 2, w: 2.6, h: 2.0 },
 
-  // Dinding Barat (2 bingkai)
-  { idx: 5, pos: [WALL.W, FRAME_Y, -8],   rotY:  Math.PI / 2, w: 3.0, h: 2.2 },
-  { idx: 6, pos: [WALL.W, FRAME_Y,  3],   rotY:  Math.PI / 2, w: 3.0, h: 2.2 },
-
-  // ── Bingkai kecil galeri foto — dinding Timur, zona selatan ──
-  // idx 7, 8, 9, dst = urutan entri gallery di exhibits.js
-  { idx: 7, pos: [WALL.E, 3.30,  7.5],  rotY: -Math.PI / 2, w: 1.4, h: 1.0 },
-  { idx: 8, pos: [WALL.E, 3.30,  9.5],  rotY: -Math.PI / 2, w: 1.4, h: 1.0 },
-  { idx: 9, pos: [WALL.E, 3.30, 11.5],  rotY: -Math.PI / 2, w: 1.4, h: 1.0 },
-  { idx:10, pos: [WALL.E, 1.90,  8.5],  rotY: -Math.PI / 2, w: 1.4, h: 1.0 },
-  { idx:11, pos: [WALL.E, 1.90, 10.5],  rotY: -Math.PI / 2, w: 1.4, h: 1.0 },
+  // ── Dinding Barat — 4 bingkai foto (idx 16–19) ────────────
+  { idx:16, pos: [WALL.W, FRAME_Y,  -6.0], rotY:  Math.PI / 2, w: 2.6, h: 2.0 },
+  { idx:17, pos: [WALL.W, FRAME_Y,  -1.5], rotY:  Math.PI / 2, w: 2.6, h: 2.0 },
+  { idx:18, pos: [WALL.W, FRAME_Y,   3.0], rotY:  Math.PI / 2, w: 2.6, h: 2.0 },
+  { idx:19, pos: [WALL.W, FRAME_Y,   7.5], rotY:  Math.PI / 2, w: 2.6, h: 2.0 },
 ];
 
 // ════════════════════════════════════════════════════════════════
@@ -92,11 +90,7 @@ const PAINTING_LAYOUT = [
 // ════════════════════════════════════════════════════════════════
 
 const SCULPTURE_POSITIONS = [
-  new THREE.Vector3(-3.5, 0, -4.0),   // [0] GitHub
-  new THREE.Vector3( 3.5, 0, -4.0),   // [1] LinkedIn
-  new THREE.Vector3(   0, 0, -0.5),   // [2] Music
-  new THREE.Vector3(-5.0, 0, 11.0),   // [3] Open to Work
-  new THREE.Vector3( 5.0, 0, 11.0),   // [4] Tech Stack
+  new THREE.Vector3(   0, 0, -0.5),   // [0] Music
 ];
 
 // ════════════════════════════════════════════════════════════════
@@ -115,11 +109,7 @@ function getRoomLabel(z) {
 // ════════════════════════════════════════════════════════════════
 
 const SCULPTURE_ANIM = [
-  { rotY: 0.008, rotX: 0.003, bobFreq: 0.85 },   // [0] GitHub
-  { rotY: 0.006, rotX: 0.004, bobFreq: 0.75 },   // [1] LinkedIn
-  { rotY: 0.010, rotX: 0.002, bobFreq: 0.70 },   // [2] Music
-  { rotY: 0.007, rotX: 0.004, bobFreq: 0.80 },   // [3] Open to Work
-  { rotY: 0.009, rotX: 0.003, bobFreq: 0.78 },   // [4] Tech Stack
+  { rotY: 0.010, rotX: 0.002, bobFreq: 0.70 },   // [0] Music
 ];
 
 // ════════════════════════════════════════════════════════════════
@@ -194,7 +184,6 @@ class MuseumApp {
     createWelcomeBoard(scene, { x: 0, z: 11.5, rotY: Math.PI });
 
     // Papan denah (dinding barat, zona selatan)
-    createMapBoard(scene, { x: WALL.W, y: FRAME_Y, z: 9.0, rotY: Math.PI / 2 });
 
     // Patung di atas pedestal
     for (const [i, data] of sculptures.entries()) {
@@ -203,8 +192,8 @@ class MuseumApp {
       this._sculptures.push(ex.mesh);
     }
 
-    // Visualizer musik (posisi patung musik = indeks 2)
-    this._musicViz = new MusicVisualizer(scene, SCULPTURE_POSITIONS[2]);
+    // Visualizer musik (posisi patung musik = indeks 0)
+    this._musicViz = new MusicVisualizer(scene, SCULPTURE_POSITIONS[0]);
   }
 
   // ── Musik ─────────────────────────────────────────────────
