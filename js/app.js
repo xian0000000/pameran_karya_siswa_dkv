@@ -181,18 +181,14 @@ class MuseumApp {
     // di atas tiap bingkai)
     const galleryNames = paintings.filter((p) => p.style === "gallery").map((p) => p.artist);
 
-    // Tukar posisi Shafira & Azra di papan nama (permintaan Shafira) —
+    // Pindahkan nama Shafira ke posisi paling bawah di papan nama —
     // posisi lukisan di dinding tidak berubah, hanya urutan di papan ini.
-    const iShafira = galleryNames.indexOf("Shafira");
-    const iAzra    = galleryNames.indexOf("Azra");
-    if (iShafira !== -1 && iAzra !== -1) {
-      [galleryNames[iShafira], galleryNames[iAzra]] = [galleryNames[iAzra], galleryNames[iShafira]];
-    }
+    const namesWithoutShafira = galleryNames.filter((n) => n !== "Shafira");
 
     createNamesBoard(scene, {
       x: -6.0, z: WALL.S, rotY: Math.PI,
       width: 3.8, height: 3.8 * 1.514,
-      names: [...galleryNames, "Aqiela", "Arkhan"],
+      names: [...namesWithoutShafira, "Aqiela", "Arkhan", "Shafira"],
     });
 
     // Papan denah (dinding barat, zona selatan)

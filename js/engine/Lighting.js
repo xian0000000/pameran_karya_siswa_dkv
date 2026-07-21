@@ -13,7 +13,7 @@ import { ROOM } from "./Museum.js";
 
 export function buildLighting(scene) {
   // ── Ambient — diredupkan supaya spotlight karya lebih menonjol ──
-  scene.add(new THREE.AmbientLight(0xfff8ec, 0.34));
+  scene.add(new THREE.AmbientLight(0xfff8ec, 0.46));
 
   // ── Lampu plafon: tengah + pinggir-pinggir ──────────────────────
   const { W, D, H } = ROOM;
@@ -31,12 +31,12 @@ export function buildLighting(scene) {
   }
 
   // Tengah plafon
-  addCeilingLight(0, 0, 1.0, 16);
+  addCeilingLight(0, 0, 1.15, 16);
 
   // Pinggir-pinggir plafon (inset dari 4 sudut dinding)
   const ix = W / 2 - 3;
   const iz = D / 2 - 3;
   [[-ix, -iz], [ix, -iz], [-ix, iz], [ix, iz]].forEach(([x, z]) => {
-    addCeilingLight(x, z, 0.7, 13);
+    addCeilingLight(x, z, 0.82, 13);
   });
 }
