@@ -20,9 +20,9 @@ export const Materials = {
       floor:    new THREE.MeshLambertMaterial({ map: TextureFactory.floor() }),
       wall:     new THREE.MeshLambertMaterial({ map: TextureFactory.wall() }),
       ceiling:  new THREE.MeshLambertMaterial({ map: TextureFactory.ceiling() }),
-      gold:     new THREE.MeshLambertMaterial({ color: 0xb8902a }),
-      darkGold: new THREE.MeshLambertMaterial({ color: 0x7a5c18 }),
-      pedestal: new THREE.MeshLambertMaterial({ color: 0x1e1c18 }),
+      gold:     new THREE.MeshLambertMaterial({ color: 0x786a5d }),
+      darkGold: new THREE.MeshLambertMaterial({ color: 0xb0a796 }),
+      pedestal: new THREE.MeshLambertMaterial({ color: 0xece4d7 }),
       glass:    new THREE.MeshLambertMaterial({ color: 0x88c0d8, transparent: true, opacity: 0.26 }),
     };
 

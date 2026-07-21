@@ -65,12 +65,6 @@ export const EXHIBIT_STYLES = {
     textColor:   "#0ea5e9",
     showLink:    true,
   },
-  music: {
-    tag:         "Musik",
-    borderColor: "#c8a050",
-    textColor:   "#ffd060",
-    showMusic:   true,
-  },
   availability: {
     tag:         "Open to Work",
     borderColor: "#22c55e",
@@ -87,6 +81,6 @@ export const EXHIBIT_STYLES = {
 // Gaya fallback jika tipe tidak dikenali
 export const DEFAULT_STYLE = {
   tag:         "Koleksi Tetap",
-  borderColor: "#3a2e18",
-  textColor:   "#5a4a28",
+  borderColor: "#786a5d",
+  textColor:   "#786a5d",
 };

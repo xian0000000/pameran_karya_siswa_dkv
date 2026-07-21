@@ -127,6 +127,19 @@ export class MusicPlayer {
 
   // ── API publik ──────────────────────────────────────────────
 
+  /** Mulai putar (no-op kalau sudah main) — dipicu sekali dari gesture user (klik enter). */
+  play() {
+    if (this._error || this._playing) return;
+
+    if (!this._ready || !this._player) {
+      this._pendingPlay = true;
+      this._setBtn("loading");
+      return;
+    }
+
+    this._player.playVideo();
+  }
+
   toggle() {
     if (this._error) {
       // Error permanen — tidak bisa embed, tapi JANGAN buka tab otomatis

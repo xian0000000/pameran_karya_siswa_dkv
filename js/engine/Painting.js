@@ -43,54 +43,33 @@ export function createPainting(scene, data, pos, rotY, w = 3.0, h = 2.2) {
   plaque.position.set(0, -(h / 2 + 0.20), 0.04);
   group.add(plaque);
 
-  // ── Label nama author di atas bingkai (mesh, tidak ikut kamera) ──
-  if (data.artist) {
-    const isTop3 = !!data.top3;
-    const lw = 640, lh = 120;
-    const labelCanvas  = document.createElement("canvas");
-    labelCanvas.width  = lw;
-    labelCanvas.height = lh;
-    const ctx          = labelCanvas.getContext("2d");
+  // ── Spotlight penyorot karya ──────────────────────────────
+  const SPOT_ANGLE = Math.PI / 4;
+  const spotPos    = new THREE.Vector3(0, h / 2 + 0.75, 1.1);
+  const targetPos  = new THREE.Vector3(0, 0, 0.07);
 
-    // Gradien emas — lebih terang untuk top3
-    const grad = ctx.createLinearGradient(0, 0, 0, lh);
-    if (isTop3) {
-      grad.addColorStop(0.00, "#fffbe8");
-      grad.addColorStop(0.20, "#f7df8c");
-      grad.addColorStop(0.55, "#e8b840");
-      grad.addColorStop(0.80, "#c8a050");
-      grad.addColorStop(1.00, "#a07820");
-    } else {
-      grad.addColorStop(0.00, "#f0d070");
-      grad.addColorStop(0.45, "#c8a050");
-      grad.addColorStop(1.00, "#8a5e18");
-    }
+  const spot = new THREE.SpotLight(0xfff4d0, 5.5, 8, SPOT_ANGLE, 0.5, 0.7);
+  spot.position.copy(spotPos);
+  spot.target.position.copy(targetPos);
+  group.add(spot);
+  group.add(spot.target);
 
-    ctx.shadowColor  = isTop3 ? "rgba(255,220,80,0.90)" : "rgba(200,160,80,0.55)";
-    ctx.shadowBlur   = isTop3 ? 32 : 18;
+  // Housing kecil lampu sorot (dekoratif)
+  const fixture = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.05, 0.07, 0.14, 10), mat.darkGold);
+  fixture.position.copy(spotPos);
+  group.add(fixture);
 
-    const fontSize   = isTop3 ? 62 : 54;
-    ctx.font         = `700 ${fontSize}px 'Georgia', serif`;
-    ctx.fillStyle    = grad;
-    ctx.textAlign    = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(data.artist, lw / 2, lh / 2);
+  // Bohlam menyala — bola kecil emissive di ujung housing
+  const bulb = new THREE.Mesh(
+    new THREE.SphereGeometry(0.045, 10, 10),
+    new THREE.MeshBasicMaterial({ color: 0xfff4c2 }),
+  );
+  bulb.position.set(spotPos.x, spotPos.y - 0.08, spotPos.z);
+  group.add(bulb);
 
-    const labelTex = new THREE.CanvasTexture(labelCanvas);
-    const planeMat = new THREE.MeshBasicMaterial({
-      map:         labelTex,
-      transparent: true,
-      depthWrite:  false,
-      side:        THREE.FrontSide,
-    });
-
-    const aspect  = lw / lh;
-    const sW      = isTop3 ? Math.min(w * 1.05, 2.9) : Math.min(w * 0.90, 2.5);
-    const sH      = sW / aspect;
-    const plane   = new THREE.Mesh(new THREE.PlaneGeometry(sW, sH), planeMat);
-    plane.position.set(0, h / 2 + sH / 2 + 0.18, 0.07);
-    group.add(plane);
-  }
+  // (Label nama author di atas bingkai dihapus — daftar nama sekarang
+  // dikumpulkan di satu papan di sebelah papan selamat datang, lihat NamesBoard.js)
 
   scene.add(group);
 

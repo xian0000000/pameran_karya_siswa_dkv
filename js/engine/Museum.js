@@ -1,15 +1,14 @@
 /**
  * Museum.js — Geometri ruangan museum.
  *
- * Ruangan: W=22 (x: -11..+11), D=28 (z: -14..+14), H=5.5
- * Pilar  : x = ±7, z = -6 / 0 / +6
+ * Ruangan: W=22 (x: -11..+11), D=28 (z: -14..+14), H=8.0
  *
  * Dependensi: THREE (global), Materials
  */
 
 import { Materials } from "./Materials.js";
 
-export const ROOM = { W: 22, D: 28, H: 5.5 };
+export const ROOM = { W: 22, D: 28, H: 8.0 };
 
 /** Tambahkan Mesh ke scene dengan posisi & rotasi Y */
 function place(scene, geo, mat, x, y, z, ry = 0) {
@@ -43,23 +42,6 @@ export function buildMuseum(scene) {
   place(scene, wNS.clone(),mat.wall,  0,   H/2,  D/2, Math.PI);   // Selatan
   place(scene, wEW,        mat.wall,  W/2, H/2,  0,  -Math.PI/2); // Timur
   place(scene, wEW.clone(),mat.wall, -W/2, H/2,  0,   Math.PI/2); // Barat
-
-  // ── Pilar ───────────────────────────────────────────────────
-  const pGeo   = new THREE.BoxGeometry(0.55, H, 0.55);
-  const capGeo = new THREE.BoxGeometry(0.80, 0.14, 0.80);
-  const basGeo = new THREE.BoxGeometry(0.80, 0.12, 0.80);
-
-  const pillarGrid = [
-    [-7, -6], [7, -6],
-    [-7,  0], [7,  0],
-    [-7,  6], [7,  6],
-  ];
-
-  pillarGrid.forEach(([x, z]) => {
-    place(scene, pGeo,   mat.wall,     x, H / 2, z);
-    place(scene, capGeo, mat.gold,     x, H - 0.07, z);
-    place(scene, basGeo, mat.gold,     x, 0.06, z);
-  });
 
   // ── Molding cornice atas (bingkai langit-langit) ──────────────
   const mW  = new THREE.BoxGeometry(W, 0.10, 0.18);

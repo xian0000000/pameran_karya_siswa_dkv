@@ -10,7 +10,7 @@
  *  z=-8   ║ [P5 Life Dash]     [P3 Chat Ocean]       ║  ← barat & timur
  *         ║                                           ║
  *         ║   ◻ GitHub      ◻ LinkedIn               ║
- *  z=-0.5 ║         ◻ Music ♪                        ║
+ *  z= 2.5 ║   ◻ Khanza  ◻ Azra  ◻ Yasmin (3D)        ║
  *         ║                                           ║
  *  z= 3   ║ [P6 StatLab]       [P4 Perpustakaan]    ║  ← barat & timur
  *         ║                                           ║
@@ -19,12 +19,13 @@
  *  z=+14  ╚═══════════════════════════════════════════╝
  *
  *  Kamera start: (0, 1.7, 10) → menghadap utara (-z)
+ *  Musik latar diputar otomatis saat klik "Masuk Museum" (lihat _initHint)
  * ════════════════════════════════════════════════════════════════
  *
  * ── Cara tambah pameran baru ────────────────────────────────────
- *  Lukisan : edit EXHIBITS (exhibits.js) + PAINTING_LAYOUT (bawah)
- *  Patung  : edit EXHIBITS (exhibits.js) + SCULPTURE_POSITIONS (bawah)
- *  Gaya UI : edit js/config/exhibit-styles.js
+ *  Lukisan  : edit EXHIBITS (exhibits.js) + PAINTING_LAYOUT (bawah)
+ *  Patung 3D: tambah entry di MODEL_DISPLAYS (_buildExhibits, bawah)
+ *  Gaya UI  : edit js/config/exhibit-styles.js
  * ════════════════════════════════════════════════════════════════
  */
 
@@ -32,9 +33,10 @@ import { EXHIBITS }          from "./data/exhibits.js";
 import { buildMuseum, ROOM } from "./engine/Museum.js";
 import { buildLighting }     from "./engine/Lighting.js";
 import { createPainting }    from "./engine/Painting.js";
-import { createSculpture }   from "./engine/Sculpture.js";
 import { createWelcomeBoard} from "./engine/WelcomeBoard.js";
-import { MusicVisualizer }   from "./engine/MusicVisualizer.js";
+import { createModelDisplay} from "./engine/ModelDisplay.js";
+import { createPhotoPanel }  from "./engine/PhotoPanel.js";
+import { createNamesBoard }  from "./engine/NamesBoard.js";
 import { InfoPanel }         from "./ui/InfoPanel.js";
 import { DragControls }      from "./ui/DragControls.js";
 import { runLoadingScreen, preWarmRenderer } from "./ui/LoadingScreen.js";
@@ -53,7 +55,7 @@ const WALL = {
   W: -(W / 2) + 0.30,   // x = -10.70
 };
 
-const FRAME_Y   = 2.65;   // ketinggian bingkai standar (eye-level)
+const FRAME_Y   = 2.8;    // ketinggian bingkai standar (diturunkan sedikit)
 
 // ════════════════════════════════════════════════════════════════
 //  LAYOUT LUKISAN
@@ -84,16 +86,6 @@ const PAINTING_LAYOUT = [
 ];
 
 // ════════════════════════════════════════════════════════════════
-//  POSISI PATUNG
-//  Indeks harus sesuai urutan sculptures di EXHIBITS
-//  Untuk tambah patung: tambah posisi baru di sini + data di exhibits.js
-// ════════════════════════════════════════════════════════════════
-
-const SCULPTURE_POSITIONS = [
-  new THREE.Vector3(   0, 0, -0.5),   // [0] Music
-];
-
-// ════════════════════════════════════════════════════════════════
 //  LABEL RUANGAN
 // ════════════════════════════════════════════════════════════════
 
@@ -104,25 +96,16 @@ function getRoomLabel(z) {
 }
 
 // ════════════════════════════════════════════════════════════════
-//  ANIMASI PATUNG
-//  Tambah baris baru jika menambah patung di SCULPTURE_POSITIONS
-// ════════════════════════════════════════════════════════════════
-
-const SCULPTURE_ANIM = [
-  { rotY: 0.010, rotX: 0.002, bobFreq: 0.70 },   // [0] Music
-];
-
-// ════════════════════════════════════════════════════════════════
 //  MuseumApp
 // ════════════════════════════════════════════════════════════════
 
 class MuseumApp {
   constructor() {
-    this._exhibits    = [];
-    this._sculptures  = [];
+    this._exhibits      = [];
+    this._modelDisplays = [];
+    this._videoToggles  = {};
     this._clock       = new THREE.Clock();
     this._rlNameEl    = document.getElementById("rl-name");
-    this._musicViz    = null;
     this._musicPlayer = null;
   }
 
@@ -147,8 +130,8 @@ class MuseumApp {
 
   _initScene() {
     this._scene            = new THREE.Scene();
-    this._scene.fog        = new THREE.FogExp2(0x0d0a06, 0.018);
-    this._scene.background = new THREE.Color(0x0d0a06);
+    this._scene.fog        = new THREE.FogExp2(0x8f8778, 0.014);
+    this._scene.background = new THREE.Color(0x8f8778);
   }
 
   _initCamera() {
@@ -169,7 +152,6 @@ class MuseumApp {
   _buildExhibits() {
     const scene     = this._scene;
     const paintings  = EXHIBITS.filter(e => e.type === "painting");
-    const sculptures = EXHIBITS.filter(e => e.type === "sculpture");
 
     // Lukisan di dinding
     for (const { idx, pos, rotY, w, h } of PAINTING_LAYOUT) {
@@ -181,32 +163,93 @@ class MuseumApp {
     }
 
     // Papan selamat datang (lobby selatan)
-    createWelcomeBoard(scene, { x: 0, z: 11.5, rotY: Math.PI });
+    createWelcomeBoard(scene, { x: 0, z: WALL.S, rotY: Math.PI });
+
+    // Foto "Guru Produktif DKV" — di sebelah kiri papan selamat datang
+    // (jarak dilebarkan lagi, sejajar tinggi dgn papan selamat datang)
+    this._exhibits.push(
+      createPhotoPanel(scene, {
+        x: 6.0, z: WALL.S, rotY: Math.PI,
+        imageUrl: "assets/people/guru-dkv.jpeg",
+        caption:  "Guru Produktif DKV",
+        width:    3.8,
+      })
+    );
+
+    // Daftar nama peserta — di sebelah kanan papan selamat datang, ukuran
+    // disamakan dgn panel foto (menggantikan label nama yang dulu melayang
+    // di atas tiap bingkai)
+    createNamesBoard(scene, {
+      x: -6.0, z: WALL.S, rotY: Math.PI,
+      width: 3.8, height: 3.8 * 1.514,
+      names: [
+        ...paintings.filter((p) => p.style === "gallery").map((p) => p.artist),
+        "Aqiela",
+        "Arkhan",
+      ],
+    });
 
     // Papan denah (dinding barat, zona selatan)
 
-    // Patung di atas pedestal
-    for (const [i, data] of sculptures.entries()) {
-      const ex = createSculpture(scene, data, SCULPTURE_POSITIONS[i]);
-      this._exhibits.push(ex);
-      this._sculptures.push(ex.mesh);
-    }
+    // Patung 3D — 3 model GLB di atas meja, berjejer di tengah aula
+    const MODEL_DISPLAYS = [
+      {
+        position: new THREE.Vector3(-4.5, 0, 2.5),
+        url:      "assets/models/sabun-khanza-3d.glb",
+        videoUrl: "assets/videos/khanza.mp4",
+        data: {
+          id:     "khanza-3d",
+          title:  "LOTUSOAP 3D — Khanza",
+          artist: "Khanza",
+          year:   "2026",
+          desc:   "Replika 3D kemasan sabun LOTUSOAP — versi tiga dimensi dari desain kemasan karya Khanza.",
+          videoUrl: "assets/videos/khanza.mp4",
+        },
+      },
+      {
+        position: new THREE.Vector3(0, 0, 2.5),
+        url:      "assets/models/sabun-azra-3d.glb",
+        videoUrl: "assets/videos/azra.mp4",
+        data: {
+          id:     "azra-3d",
+          title:  "Terapure 3D — Azra",
+          artist: "Azra",
+          year:   "2026",
+          desc:   "Replika 3D kemasan sabun Terapure — versi tiga dimensi dari desain jaring-jaring kemasan karya Azra.",
+          videoUrl: "assets/videos/azra.mp4",
+        },
+      },
+      {
+        position: new THREE.Vector3(4.5, 0, 2.5),
+        url:      "assets/models/sabun-yasmin-3d.glb",
+        data: {
+          id:     "yasmin-3d",
+          title:  "Sabun Yasmin 3D — Yasmin",
+          artist: "Yasmin",
+          year:   "2026",
+          desc:   "Replika 3D desain kemasan sabun karya Yasmin.",
+        },
+      },
+    ];
 
-    // Visualizer musik (posisi patung musik = indeks 0)
-    this._musicViz = new MusicVisualizer(scene, SCULPTURE_POSITIONS[0]);
+    for (const opts of MODEL_DISPLAYS) {
+      const modelDisplay = createModelDisplay(scene, opts);
+      this._exhibits.push(modelDisplay);
+      this._modelDisplays.push(modelDisplay);
+      if (modelDisplay.toggleVideo) {
+        this._videoToggles[opts.data.id] = modelDisplay.toggleVideo;
+      }
+    }
   }
 
   // ── Musik ─────────────────────────────────────────────────
 
   _initMusic() {
-    const musicSculpture = EXHIBITS.filter(e => e.type === "sculpture")
-                                   .find(e => e.style === "music");
-    const videoId = musicSculpture?.videoId ?? "5uDY6hEYfPc";
+    const videoId = "LxVOZlP78dg";
 
     this._musicPlayer = new MusicPlayer(videoId);
 
     this._musicPlayer.onStateChange((playing) => {
-      this._musicViz.setPlaying(playing);
       const badge = document.getElementById("now-playing");
       if (badge) badge.style.display = playing ? "flex" : "none";
       document.dispatchEvent(
@@ -219,11 +262,28 @@ class MuseumApp {
     });
   }
 
+  // ── Video patung (toggle 3D ↔ video) ───────────────────────
+
+  _initVideoToggle() {
+    document.addEventListener("museum:video-toggle", (e) => {
+      const { id } = e.detail;
+      const toggle = this._videoToggles[id];
+      if (!toggle) return;
+      const showing = toggle();
+      document.dispatchEvent(
+        new CustomEvent("museum:video-state", { detail: { id, showing } })
+      );
+    });
+  }
+
   // ── Layar hint (selamat datang) ───────────────────────────
 
   _initHint() {
     const hint    = document.getElementById("hint");
-    const dismiss = () => hint.classList.add("off");
+    const dismiss = () => {
+      hint.classList.add("off");
+      this._musicPlayer.play();   // musik otomatis main begitu masuk museum
+    };
 
     document.getElementById("enter-btn").addEventListener("click", dismiss);
     this._renderer.domElement.addEventListener("mousedown",  dismiss);
@@ -235,21 +295,24 @@ class MuseumApp {
   _loop() {
     requestAnimationFrame(() => this._loop());
     const dt = this._clock.getDelta();
-    const t  = this._clock.elapsedTime;
 
     this._controls.update(dt);
     this._rlNameEl.textContent = getRoomLabel(this._camera.position.z);
     this._infoPanel.update(this._camera.position, this._exhibits);
 
-    // Animasi patung
-    this._sculptures.forEach((mesh, i) => {
-      const anim = SCULPTURE_ANIM[i] ?? SCULPTURE_ANIM[0];
-      mesh.rotation.y += anim.rotY;
-      mesh.rotation.x += anim.rotX;
-      mesh.position.y  = 1.65 + Math.sin(t * anim.bobFreq + i * 1.5) * 0.055;
+    // Putar pelan meja model 3D (efek turntable) — kalau lagi tampilkan
+    // video, berhenti muter & langsung hadapkan layarnya lurus ke kamera
+    // (bukan berhenti di sudut sisa putaran yang miring/acak).
+    this._modelDisplays.forEach((md) => {
+      if (md.videoState.showing) {
+        const dx = this._camera.position.x - md.mesh.position.x;
+        const dz = this._camera.position.z - md.mesh.position.z;
+        md.mesh.rotation.y = Math.atan2(dx, dz);
+      } else {
+        md.mesh.rotation.y += 0.006;
+      }
     });
 
-    if (this._musicViz) this._musicViz.update(t);
     this._renderer.render(this._scene, this._camera);
   }
 
@@ -265,6 +328,7 @@ class MuseumApp {
     buildLighting(this._scene);
     this._buildExhibits();
     this._initMusic();
+    this._initVideoToggle();
 
     this._infoPanel = new InfoPanel();
     this._controls  = new DragControls(this._camera, this._renderer.domElement, ROOM);

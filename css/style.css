@@ -20,9 +20,9 @@
 
 body {
   overflow: hidden;
-  background: #080604;
+  background: #f3f0eb;
   font-family: Georgia, "Times New Roman", serif;
-  color: #9a8060;
+  color: #4a3a20;
   user-select: none;
 }
 
@@ -41,7 +41,7 @@ canvas.dragging {
 #loading {
   position: fixed;
   inset: 0;
-  background: #080604;
+  background: #f3f0eb;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -51,7 +51,7 @@ canvas.dragging {
 }
 
 #loading h1 {
-  color: #c8a050;
+  color: #786a5d;
   font-size: 2.6rem;
   letter-spacing: 0.45em;
   text-transform: uppercase;
@@ -60,7 +60,7 @@ canvas.dragging {
 }
 
 .l-sub {
-  color: #5a4a2a;
+  color: #8a7050;
   font-size: 0.65rem;
   letter-spacing: 0.38em;
   text-transform: uppercase;
@@ -70,19 +70,19 @@ canvas.dragging {
 .l-bar {
   width: 180px;
   height: 1px;
-  background: #2a1e0e;
+  background: #e0d5bc;
 }
 
 .l-fill {
   height: 100%;
-  background: #c8a050;
+  background: #786a5d;
   width: 0%;
   transition: width 0.18s ease;
 }
 
 .l-lbl {
   margin-top: 0.9rem;
-  color: #3a2e18;
+  color: #9a8a70;
   font-size: 0.6rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -96,8 +96,8 @@ canvas.dragging {
   inset: 0;
   background: radial-gradient(
     ellipse at center,
-    rgba(8, 6, 4, 0.50) 0%,
-    rgba(8, 6, 4, 0.88) 100%
+    rgba(243, 240, 235, 0.55) 0%,
+    rgba(247, 244, 236, 0.92) 100%
   );
   display: flex;
   flex-direction: column;
@@ -113,7 +113,7 @@ canvas.dragging {
 }
 
 .h-title {
-  color: #c8a050;
+  color: #786a5d;
   font-size: 1.5rem;
   letter-spacing: 0.38em;
   text-transform: uppercase;
@@ -122,7 +122,7 @@ canvas.dragging {
 }
 
 .h-sub {
-  color: #6a5a3a;
+  color: #7a6a48;
   font-size: 0.68rem;
   letter-spacing: 0.18em;
   margin-bottom: 1.6rem;
@@ -131,12 +131,12 @@ canvas.dragging {
 .divider {
   width: 50px;
   height: 1px;
-  background: #3a2e18;
+  background: #d8cbaa;
   margin: 0 auto 1.5rem;
 }
 
 .h-ctrl {
-  color: #4a3e28;
+  color: #6a5a3a;
   font-size: 0.62rem;
   letter-spacing: 0.12em;
   line-height: 2.3;
@@ -145,14 +145,14 @@ canvas.dragging {
 }
 
 .h-ctrl span {
-  color: #8a7050;
+  color: #4a3a20;
 }
 
 .h-btn {
   margin-top: 1.8rem;
   background: transparent;
-  border: 1px solid #c8a050;
-  color: #c8a050;
+  border: 1px solid #786a5d;
+  color: #786a5d;
   font-family: Georgia, serif;
   font-size: 0.68rem;
   letter-spacing: 0.28em;
@@ -163,8 +163,8 @@ canvas.dragging {
 }
 
 .h-btn:hover {
-  background: #c8a050;
-  color: #080604;
+  background: #786a5d;
+  color: #fffdf8;
 }
 
 
@@ -178,8 +178,8 @@ canvas.dragging {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  background: rgba(8, 6, 4, 0.78);
-  border: 1px solid #3a2e18;
+  background: rgba(243, 240, 235, 0.9);
+  border: 1px solid #ddd2ba;
   padding: 0.55rem 1.2rem;
   border-radius: 2px;
   z-index: 90;
@@ -193,7 +193,7 @@ canvas.dragging {
 }
 
 .ch-text {
-  color: #8a7050;
+  color: #6a5a3a;
   font-size: 0.62rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -233,7 +233,7 @@ canvas.dragging {
 
 .rl-h {
   display: block;
-  color: #3a2e18;
+  color: #9a8a70;
   font-size: 0.55rem;
   letter-spacing: 0.32em;
   text-transform: uppercase;
@@ -241,7 +241,7 @@ canvas.dragging {
 
 .rl-n {
   display: block;
-  color: #8a7050;
+  color: #4a3a20;
   font-size: 0.7rem;
   letter-spacing: 0.22em;
   margin-top: 0.12rem;
@@ -253,7 +253,7 @@ canvas.dragging {
   position: fixed;
   bottom: 20px;
   right: 24px;
-  color: #2a2010;
+  color: #9a8a70;
   font-size: 0.56rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -263,7 +263,7 @@ canvas.dragging {
 }
 
 #hud span {
-  color: #4a3e28;
+  color: #4a3a20;
 }
 
 
@@ -274,9 +274,9 @@ canvas.dragging {
   bottom: 5vh;
   left: 50%;
   transform: translateX(-50%) translateY(8px);
-  background: rgba(8, 6, 4, 0.93);
-  border: 1px solid #2a2010;
-  border-top: 1px solid #c8a050;
+  background: rgba(243, 240, 235, 0.96);
+  border: 1px solid #ddd2ba;
+  border-top: 1px solid #786a5d;
   padding: 1rem 2.2rem 1.2rem;
   min-width: 320px;
   max-width: 460px;
@@ -285,6 +285,7 @@ canvas.dragging {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s, transform 0.3s;
+  box-shadow: 0 6px 28px rgba(80, 60, 20, 0.12);
 }
 
 #panel.on {
@@ -294,7 +295,7 @@ canvas.dragging {
 }
 
 #p-title {
-  color: #c8a050;
+  color: #786a5d;
   font-size: 0.92rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -302,13 +303,13 @@ canvas.dragging {
 }
 
 #p-desc {
-  color: #9a8060;
+  color: #4a3a20;
   font-size: 0.73rem;
   line-height: 1.7;
 }
 
 #p-meta {
-  color: #3a2e18;
+  color: #9a8a70;
   font-size: 0.6rem;
   letter-spacing: 0.16em;
   margin-top: 0.6rem;
@@ -316,8 +317,8 @@ canvas.dragging {
 
 .p-tag {
   display: inline-block;
-  border: 1px solid #3a2e18;
-  color: #5a4a28;
+  border: 1px solid #d8cbaa;
+  color: #7a6a48;
   font-size: 0.56rem;
   letter-spacing: 0.14em;
   padding: 0.1rem 0.5rem;
@@ -329,8 +330,8 @@ canvas.dragging {
 .p-link-btn {
   display: inline-block;
   background: transparent;
-  border: 1px solid #c8a050;
-  color: #c8a050;
+  border: 1px solid #786a5d;
+  color: #786a5d;
   font-family: Georgia, serif;
   font-size: 0.68rem;
   letter-spacing: 0.28em;
@@ -342,8 +343,8 @@ canvas.dragging {
 }
 
 .p-link-btn:hover {
-  background: #c8a050;
-  color: #080604;
+  background: #786a5d;
+  color: #fffdf8;
 }
 
 
@@ -375,15 +376,15 @@ canvas.dragging {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: rgba(8, 6, 4, 0.55);
-  border: 1.5px solid rgba(200, 160, 80, 0.35);
+  background: rgba(243, 240, 235, 0.55);
+  border: 1.5px solid rgba(120, 106, 93, 0.35);
   backdrop-filter: blur(2px);
   transition: border-color 0.15s;
 }
 
 #joystick-base.active #joystick-ring {
-  border-color: rgba(200, 160, 80, 0.75);
-  background: rgba(8, 6, 4, 0.70);
+  border-color: rgba(120, 106, 93, 0.75);
+  background: rgba(243, 240, 235, 0.75);
 }
 
 /* Garis panduan dalam (+) */
@@ -391,7 +392,7 @@ canvas.dragging {
 #joystick-ring::after {
   content: "";
   position: absolute;
-  background: rgba(200, 160, 80, 0.12);
+  background: rgba(176, 167, 150, 0.12);
 }
 #joystick-ring::before {
   top: 50%;  left: 20%;  right: 20%;  height: 1px;
@@ -408,7 +409,7 @@ canvas.dragging {
   position: absolute;
   top: 6px; left: 50%;
   transform: translateX(-50%);
-  color: rgba(200, 160, 80, 0.3);
+  color: rgba(120, 106, 93, 0.4);
   font-size: 0.65rem;
   line-height: 1;
   z-index: 1;
@@ -425,11 +426,11 @@ canvas.dragging {
   transform: translate(-50%, -50%);
   background: radial-gradient(
     circle at 38% 36%,
-    rgba(200, 160, 80, 0.85) 0%,
-    rgba(140, 100, 30, 0.90) 55%,
-    rgba(80, 55, 10, 0.95) 100%
+    rgba(176, 167, 150, 0.85) 0%,
+    rgba(120, 106, 93, 0.90) 55%,
+    rgba(90, 78, 68, 0.95) 100%
   );
-  border: 1.5px solid rgba(200, 160, 80, 0.6);
+  border: 1.5px solid rgba(176, 167, 150, 0.6);
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
@@ -439,7 +440,7 @@ canvas.dragging {
 
 #joystick-base.active #joystick-knob {
   box-shadow:
-    0 4px 16px rgba(200, 160, 80, 0.35),
+    0 4px 16px rgba(176, 167, 150, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transition: none; /* No lag while dragging */
 }
@@ -449,7 +450,7 @@ canvas.dragging {
   position: fixed;
   bottom: 10px;
   left: 28px;
-  color: #3a2e18;
+  color: #9a8a70;
   font-size: 0.48rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -483,8 +484,8 @@ canvas.dragging {
     gap: 10px;
     margin: 14px auto 4px;
     padding: 10px 16px;
-    background: rgba(200, 160, 80, 0.12);
-    border: 1px solid rgba(200, 160, 80, 0.45);
+    background: rgba(176, 167, 150, 0.12);
+    border: 1px solid rgba(176, 167, 150, 0.45);
     border-radius: 10px;
     max-width: 280px;
     animation: pulse-hint 2s ease-in-out infinite;
@@ -495,12 +496,12 @@ canvas.dragging {
   }
   .lh-text {
     font-size: 0.78rem;
-    color: #e8c870;
+    color: #786a5d;
     line-height: 1.4;
     text-align: left;
   }
   .lh-text strong {
-    color: #c8a050;
+    color: #786a5d;
   }
 }
 
@@ -521,8 +522,8 @@ canvas.dragging {
 
 .p-music-btn {
   background: transparent;
-  border: 1px solid #c8a050;
-  color: #c8a050;
+  border: 1px solid #786a5d;
+  color: #786a5d;
   font-family: Georgia, serif;
   font-size: 0.68rem;
   letter-spacing: 0.24em;
@@ -532,13 +533,13 @@ canvas.dragging {
   transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 .p-music-btn:hover {
-  background: #c8a050;
-  color: #080604;
+  background: #786a5d;
+  color: #fffdf8;
 }
 .p-music-btn.playing {
-  border-color: #ffd060;
-  color: #ffd060;
-  background: rgba(200,160,80,0.12);
+  border-color: #b0a796;
+  color: #786a5d;
+  background: rgba(176,167,150,0.20);
 }
 
 #now-playing {
@@ -548,19 +549,20 @@ canvas.dragging {
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  background: rgba(8,6,4,0.88);
-  border: 1px solid rgba(200,160,80,0.4);
-  border-left: 2px solid #c8a050;
+  background: rgba(243,240,235,0.92);
+  border: 1px solid rgba(160,120,50,0.4);
+  border-left: 2px solid #786a5d;
   padding: 0.35rem 0.85rem;
   z-index: 30;
   animation: np-fadein 0.4s ease;
+  box-shadow: 0 4px 16px rgba(80,60,20,0.10);
 }
 @keyframes np-fadein {
   from { opacity:0; transform:translateY(6px); }
   to   { opacity:1; transform:translateY(0);   }
 }
 .np-note {
-  color: #c8a050;
+  color: #786a5d;
   font-size: 0.8rem;
   animation: np-pulse 1.2s ease-in-out infinite;
 }
@@ -569,7 +571,7 @@ canvas.dragging {
   50%       { opacity: 0.4; }
 }
 .np-text {
-  color: #8a7050;
+  color: #6a5a3a;
   font-size: 0.58rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;

@@ -22,60 +22,40 @@ function makeTexture(drawFn, size, repeatX = 1, repeatY = 1) {
 
 /* ─── export ──────────────────────────────────────────── */
 export const TextureFactory = {
-  /** Lantai marmer krem dengan serat acak */
+  /** Lantai — pelat emas (foto), diulang sebagai ubin */
   floor() {
-    return makeTexture((ctx, S) => {
-      const g = ctx.createLinearGradient(0, 0, S, S);
-      g.addColorStop(0, "#ede5d5");
-      g.addColorStop(0.5, "#f0eae0");
-      g.addColorStop(1, "#ddd5c0");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, S, S);
-
-      for (let i = 0; i < 14; i++) {
-        ctx.beginPath();
-        ctx.strokeStyle = `rgba(140,115,82,${0.07 + Math.random() * 0.14})`;
-        ctx.lineWidth = 0.5 + Math.random() * 1.2;
-        let x = Math.random() * S, y = Math.random() * S;
-        ctx.moveTo(x, y);
-        for (let j = 0; j < 7; j++) {
-          x += (Math.random() - 0.5) * 60;
-          y += (Math.random() - 0.5) * 38;
-          ctx.lineTo(x, y);
-        }
-        ctx.stroke();
-      }
-    }, 512, 8, 8);
+    const tex = new THREE.TextureLoader().load("assets/textures/images.jpg");
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(8, 8);
+    tex.encoding = THREE.sRGBEncoding;
+    return tex;
   },
 
-  /** Dinding bata gelap */
+  /** Dinding — satu warna plester putih dengan butiran halus merata */
   wall() {
     return makeTexture((ctx, S) => {
-      ctx.fillStyle = "#1c1610";
+      ctx.fillStyle = "#ece4d7";
       ctx.fillRect(0, 0, S, S);
-      const rh = 48;
-      for (let r = 0; r * rh < S + rh; r++) {
-        const bw = r % 2 === 0 ? 88 : 72;
-        for (let x = 0; x < S; x += bw) {
-          const v = 13 + Math.random() * 9;
-          ctx.fillStyle = `rgb(${v + 5},${v + 1},${v - 2})`;
-          ctx.fillRect(x + 1, r * rh + 1, bw - 2, rh - 2);
-        }
-        ctx.fillStyle = "rgba(0,0,0,.5)";
-        ctx.fillRect(0, r * rh, S, 1);
-        for (let x = 0; x < S; x += r % 2 === 0 ? 88 : 72)
-          ctx.fillRect(x, r * rh, 1, rh);
+
+      for (let i = 0; i < 900; i++) {
+        const x = Math.random() * S;
+        const y = Math.random() * S;
+        const light = Math.random() > 0.5;
+        ctx.fillStyle = light
+          ? `rgba(255,255,255,${0.03 + Math.random() * 0.04})`
+          : `rgba(120,100,75,${0.02 + Math.random() * 0.04})`;
+        ctx.fillRect(x, y, 1, 1);
       }
-    }, 256, 3, 2);
+    }, 256, 3, 3);
   },
 
-  /** Langit-langit dengan panel kayu */
+  /** Langit-langit — satu warna dengan garis panel halus (bukan gradasi) */
   ceiling() {
     return makeTexture((ctx, S) => {
-      ctx.fillStyle = "#18140e";
+      ctx.fillStyle = "#f3f0eb";
       ctx.fillRect(0, 0, S, S);
-      ctx.strokeStyle = "rgba(75,55,28,.38)";
-      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = "rgba(120,106,93,.18)";
+      ctx.lineWidth = 1.5;
       for (let i = 0; i <= S; i += 128) {
         ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, S); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(S, i); ctx.stroke();

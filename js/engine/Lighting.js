@@ -1,48 +1,42 @@
 /**
- * Lighting.js — Sistem pencahayaan museum tiga zona.
+ * Lighting.js — Pencahayaan dasar museum.
  *
- * Zona:
- *   - Galeri Utara  (z < -5) : cahaya hangat lebih terang
- *   - Aula Tengah   (-5..+5) : cahaya netral medium
- *   - Galeri Selatan (z > +5) : cahaya sedikit lebih dingin (lobby)
+ * Ambient sengaja diredupkan (remang-remang) supaya spotlight di tiap
+ * karya (lihat Painting.js) jadi kontras dan kelihatan jelas sebagai
+ * sumber cahaya utama, bukan cuma ambient rata. Ditambah beberapa titik
+ * lampu plafon (tengah + pinggir-pinggir) sebagai pengisi suasana.
  *
- * Dependensi: THREE (global)
+ * Dependensi: THREE (global), Museum (ROOM)
  */
 
 import { ROOM } from "./Museum.js";
 
-const H = ROOM.H;   // 5.5
-
 export function buildLighting(scene) {
-  // ── Ambient — cahaya dasar hangat seperti torchlight museum ──
-  scene.add(new THREE.AmbientLight(0x2e2010, 0.9));
+  // ── Ambient — diredupkan supaya spotlight karya lebih menonjol ──
+  scene.add(new THREE.AmbientLight(0xfff8ec, 0.22));
 
-  // ── Bohlam geometry (shared) ──────────────────────────────────
-  const bulbGeo = new THREE.SphereGeometry(0.09, 8, 8);
-  const bulbMat = new THREE.MeshBasicMaterial({ color: 0xffe8aa });
+  // ── Lampu plafon: tengah + pinggir-pinggir ──────────────────────
+  const { W, D, H } = ROOM;
+  const bulbGeo = new THREE.SphereGeometry(0.08, 10, 10);
+  const bulbMat = new THREE.MeshBasicMaterial({ color: 0xfff4c2 });
 
-  function addCeilingLight(x, z, intensity = 0.5, color = 0xfff0cc, radius = 14) {
-    const pt = new THREE.PointLight(color, intensity, radius);
-    pt.position.set(x, H - 0.28, z);
+  function addCeilingLight(x, z, intensity, radius) {
+    const pt = new THREE.PointLight(0xfff4d0, intensity, radius, 1.2);
+    pt.position.set(x, H - 0.3, z);
     scene.add(pt);
+
     const bulb = new THREE.Mesh(bulbGeo, bulbMat);
     bulb.position.copy(pt.position);
     scene.add(bulb);
   }
 
-  // ── Galeri Utara — 2 lampu radius besar ──────────────────
-  [[-3, -10], [3, -10],
-  ].forEach(([x, z]) => addCeilingLight(x, z, 0.65, 0xfff2d0, 18));
+  // Tengah plafon
+  addCeilingLight(0, 0, 0.8, 16);
 
-  // ── Aula Tengah — 2 lampu ────────────────────────────────
-  [[-3, -1], [3, -1],
-  ].forEach(([x, z]) => addCeilingLight(x, z, 0.55, 0xffe8c0, 18));
-
-  // ── Galeri Selatan — 2 lampu ─────────────────────────────
-  [[-3, 9], [3, 9],
-  ].forEach(([x, z]) => addCeilingLight(x, z, 0.55, 0xffeedd, 18));
-
-  // ── Lampu pojok kiri & kanan tengah ──────────────────────
-  [[-9.5, 0, 0.35], [9.5, 0, 0.35],
-  ].forEach(([x, z, i]) => addCeilingLight(x, z, i, 0xffeedd, 14));
+  // Pinggir-pinggir plafon (inset dari 4 sudut dinding)
+  const ix = W / 2 - 3;
+  const iz = D / 2 - 3;
+  [[-ix, -iz], [ix, -iz], [-ix, iz], [ix, iz]].forEach(([x, z]) => {
+    addCeilingLight(x, z, 0.55, 13);
+  });
 }

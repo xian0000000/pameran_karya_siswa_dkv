@@ -24,6 +24,8 @@ export class InfoPanel {
     this._link      = document.getElementById("p-link");
     this._musicWrap = document.getElementById("p-music-wrap");
     this._musicBtn  = document.getElementById("p-music-btn");
+    this._videoWrap = document.getElementById("p-video-wrap");
+    this._videoBtn  = document.getElementById("p-video-btn");
     this._last      = null;
 
     this._bindEvents();
@@ -47,12 +49,12 @@ export class InfoPanel {
   _bindEvents() {
     // Hover efek pada tombol link
     this._link.addEventListener("mouseenter", () => {
-      this._link.style.background = "#c8a050";
-      this._link.style.color      = "#080604";
+      this._link.style.background = "#786a5d";
+      this._link.style.color      = "#fffdf8";
     });
     this._link.addEventListener("mouseleave", () => {
       this._link.style.background = "transparent";
-      this._link.style.color      = "#c8a050";
+      this._link.style.color      = "#786a5d";
     });
 
     // Tombol musik → dispatch event ke app.js
@@ -63,6 +65,20 @@ export class InfoPanel {
     // Sinkron state tombol musik dari luar
     document.addEventListener("museum:music-state", (e) => {
       this._syncMusicBtn(e.detail.playing);
+    });
+
+    // Tombol video → dispatch event ke app.js (bawa id patungnya)
+    this._videoBtn.addEventListener("click", () => {
+      if (!this._last) return;
+      document.dispatchEvent(
+        new CustomEvent("museum:video-toggle", { detail: { id: this._last.data.id } })
+      );
+    });
+
+    // Sinkron state tombol video dari luar
+    document.addEventListener("museum:video-state", (e) => {
+      if (!this._last || this._last.data.id !== e.detail.id) return;
+      this._syncVideoBtn(e.detail.showing);
     });
   }
 
@@ -96,11 +112,25 @@ export class InfoPanel {
       this._linkWrap.style.display  = "none";
       this._musicWrap.style.display = "none";
     }
+
+    // Tombol "Tonton Video" — independen dari style, cukup punya videoUrl
+    if (data.videoUrl) {
+      this._videoWrap.style.display = "block";
+      this._syncVideoBtn(false);
+    } else {
+      this._videoWrap.style.display = "none";
+    }
   }
 
   _syncMusicBtn(playing) {
     if (!this._musicBtn) return;
     this._musicBtn.textContent = playing ? "⏸  Pause Musik" : "▶  Putar Musik";
     this._musicBtn.classList.toggle("playing", playing);
+  }
+
+  _syncVideoBtn(showing) {
+    if (!this._videoBtn) return;
+    this._videoBtn.textContent = showing ? "◼  Lihat Patung 3D" : "▶  Tonton Video";
+    this._videoBtn.classList.toggle("playing", showing);
   }
 }
