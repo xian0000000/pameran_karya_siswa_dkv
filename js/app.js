@@ -179,14 +179,20 @@ class MuseumApp {
     // Daftar nama peserta — di sebelah kanan papan selamat datang, ukuran
     // disamakan dgn panel foto (menggantikan label nama yang dulu melayang
     // di atas tiap bingkai)
+    const galleryNames = paintings.filter((p) => p.style === "gallery").map((p) => p.artist);
+
+    // Tukar posisi Shafira & Azra di papan nama (permintaan Shafira) —
+    // posisi lukisan di dinding tidak berubah, hanya urutan di papan ini.
+    const iShafira = galleryNames.indexOf("Shafira");
+    const iAzra    = galleryNames.indexOf("Azra");
+    if (iShafira !== -1 && iAzra !== -1) {
+      [galleryNames[iShafira], galleryNames[iAzra]] = [galleryNames[iAzra], galleryNames[iShafira]];
+    }
+
     createNamesBoard(scene, {
       x: -6.0, z: WALL.S, rotY: Math.PI,
       width: 3.8, height: 3.8 * 1.514,
-      names: [
-        ...paintings.filter((p) => p.style === "gallery").map((p) => p.artist),
-        "Aqiela",
-        "Arkhan",
-      ],
+      names: [...galleryNames, "Aqiela", "Arkhan"],
     });
 
     // Papan denah (dinding barat, zona selatan)
@@ -249,9 +255,17 @@ class MuseumApp {
 
     this._musicPlayer = new MusicPlayer(videoId);
 
+    const badge = document.getElementById("now-playing");
+    const label = badge?.querySelector(".np-text");
+
     this._musicPlayer.onStateChange((playing) => {
-      const badge = document.getElementById("now-playing");
-      if (badge) badge.style.display = playing ? "flex" : "none";
+      if (badge) {
+        badge.classList.add("np-on");
+        badge.classList.toggle("paused", !playing);
+        badge.setAttribute("aria-pressed", String(playing));
+        badge.setAttribute("aria-label", playing ? "Jeda musik latar" : "Lanjutkan musik latar");
+      }
+      if (label) label.textContent = playing ? "Now Playing" : "Dijeda";
       document.dispatchEvent(
         new CustomEvent("museum:music-state", { detail: { playing } })
       );
@@ -260,6 +274,18 @@ class MuseumApp {
     document.addEventListener("museum:music-toggle", () => {
       this._musicPlayer.toggle();
     });
+
+    // Panel di kanan bawah bisa diklik langsung utk pause/lanjutkan musik
+    if (badge) {
+      const toggle = () => document.dispatchEvent(new CustomEvent("museum:music-toggle"));
+      badge.addEventListener("click", toggle);
+      badge.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          toggle();
+        }
+      });
+    }
   }
 
   // ── Video patung (toggle 3D ↔ video) ───────────────────────

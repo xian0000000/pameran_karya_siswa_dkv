@@ -546,7 +546,7 @@ canvas.dragging {
   position: fixed;
   bottom: 22px;
   right: 24px;
-  display: flex;
+  display: none;
   align-items: center;
   gap: 0.45rem;
   background: rgba(243,240,235,0.92);
@@ -554,8 +554,19 @@ canvas.dragging {
   border-left: 2px solid #786a5d;
   padding: 0.35rem 0.85rem;
   z-index: 30;
-  animation: np-fadein 0.4s ease;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
   box-shadow: 0 4px 16px rgba(80,60,20,0.10);
+}
+#now-playing.np-on {
+  display: flex;
+  animation: np-fadein 0.4s ease;
+}
+#now-playing:hover {
+  background: rgba(243,240,235,1);
+  border-left-color: #b0906a;
+  transform: translateY(-1px);
 }
 @keyframes np-fadein {
   from { opacity:0; transform:translateY(6px); }
@@ -565,6 +576,10 @@ canvas.dragging {
   color: #786a5d;
   font-size: 0.8rem;
   animation: np-pulse 1.2s ease-in-out infinite;
+}
+#now-playing.paused .np-note {
+  animation: none;
+  opacity: 0.45;
 }
 @keyframes np-pulse {
   0%, 100% { opacity: 1; }
