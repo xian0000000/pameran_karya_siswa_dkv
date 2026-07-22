@@ -251,8 +251,25 @@ class MuseumApp {
 
     this._musicPlayer = new MusicPlayer(videoId);
 
-    const badge = document.getElementById("now-playing");
-    const label = badge?.querySelector(".np-text");
+    const badge     = document.getElementById("now-playing");
+    const statusEl  = document.getElementById("np-status");
+    const songEl    = document.getElementById("np-song");
+    const channelEl = document.getElementById("np-channel");
+    const ytLink    = document.getElementById("np-yt-link");
+
+    if (ytLink) ytLink.href = `https://www.youtube.com/watch?v=${videoId}`;
+
+    // Ambil judul asli & nama channel via oEmbed YouTube (publik, tanpa API key)
+    // supaya penonton tahu ini lagu apa & sumbernya, bukan cuma tombol pause.
+    fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`)
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => {
+        if (songEl)    songEl.textContent    = data.title;
+        if (channelEl) channelEl.textContent  = data.author_name;
+      })
+      .catch(() => {
+        if (songEl) songEl.textContent = "Musik Latar";
+      });
 
     this._musicPlayer.onStateChange((playing) => {
       if (badge) {
@@ -261,7 +278,7 @@ class MuseumApp {
         badge.setAttribute("aria-pressed", String(playing));
         badge.setAttribute("aria-label", playing ? "Jeda musik latar" : "Lanjutkan musik latar");
       }
-      if (label) label.textContent = playing ? "Now Playing" : "Dijeda";
+      if (statusEl) statusEl.textContent = playing ? "Now Playing" : "Dijeda";
       document.dispatchEvent(
         new CustomEvent("museum:music-state", { detail: { playing } })
       );
@@ -281,6 +298,12 @@ class MuseumApp {
           toggle();
         }
       });
+    }
+
+    // Link YouTube harus buka tab baru saja, jangan ikut men-toggle musik
+    if (ytLink) {
+      ytLink.addEventListener("click",   (e) => e.stopPropagation());
+      ytLink.addEventListener("keydown", (e) => e.stopPropagation());
     }
   }
 
@@ -302,7 +325,14 @@ class MuseumApp {
 
   _initHint() {
     const hint    = document.getElementById("hint");
+    let entered   = false;
     const dismiss = () => {
+      // Tanpa guard ini, tiap mousedown/touchstart di canvas (mis. drag
+      // kamera) memicu dismiss() lagi → memanggil play() lagi, sehingga
+      // musik yang sudah di-pause pengunjung nyala sendiri saat mereka
+      // bergerak/drag pandangan.
+      if (entered) return;
+      entered = true;
       hint.classList.add("off");
       this._musicPlayer.play();   // musik otomatis main begitu masuk museum
     };

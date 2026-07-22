@@ -66,11 +66,22 @@
       <span class="rl-n" id="rl-name">Lobby Utama</span>
     </div>
 
-    <!-- Panel musik latar — bisa diklik untuk jeda/lanjutkan -->
+    <!-- Panel musik latar — bisa diklik untuk jeda/lanjutkan, tampilkan judul & sumbernya -->
     <div id="now-playing" role="button" tabindex="0" aria-pressed="true"
          aria-label="Jeda musik latar" aria-live="polite">
       <span class="np-note">&#9834;</span>
-      <span class="np-text">Now Playing</span>
+      <div class="np-info">
+        <span class="np-status" id="np-status">Now Playing</span>
+        <span class="np-song" id="np-song">Memuat…</span>
+        <span class="np-channel" id="np-channel"></span>
+      </div>
+      <a id="np-yt-link" class="np-yt-link" href="#" target="_blank"
+         rel="noopener noreferrer" title="Buka di YouTube" aria-label="Buka video di YouTube">
+        <svg viewBox="0 0 24 17" width="16" height="12" aria-hidden="true">
+          <path fill="currentColor" d="M23.5 2.6a3 3 0 0 0-2.1-2.1C19.5 0 12 0 12 0S4.5 0 2.6.5A3 3 0 0 0 .5 2.6 31 31 0 0 0 0 8.5a31 31 0 0 0 .5 5.9 3 3 0 0 0 2.1 2.1C4.5 17 12 17 12 17s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-5.9 31 31 0 0 0-.5-5.9Z"/>
+          <path fill="#f3f0eb" d="M9.6 12.1 15.8 8.5 9.6 4.9v7.2Z"/>
+        </svg>
+      </a>
     </div>
 
 
